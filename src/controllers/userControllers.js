@@ -1,6 +1,5 @@
 const pool = require('../config/db');
 
-// User registration route
 const registerUser = (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -21,7 +20,6 @@ const registerUser = (req, res) => {
   }
 };
 
-// User login route
 const loginUser = (req, res) => {
   try {
     const { username, password } = req.body;
