@@ -7,7 +7,4 @@ router.post('/signup', registerUser);
 
 router.post('/login', loginUser);
 
-router.get('/profile', authenticateUser, (req, res) => {
-});
-
 module.exports = router;
