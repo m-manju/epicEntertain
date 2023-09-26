@@ -1,4 +1,6 @@
 const userModel = require('../models/user');
+const jwt = require('jsonwebtoken');
+
 const registerUser = (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -30,8 +32,13 @@ const loginUser = (req, res) => {
       if (results.length === 0) {
         return res.status(401).json({ error: 'User not found or incorrect password' });
       }
+
+      const user = {username: results[0].username,};
+      const token = jwt.sign(user, 'secret', { expiresIn: '1h' });
+      res.json({
+          message: 'Login successful', token: token,
+      });
       console.log('Login successful');
-      res.status(200).json({ message: 'Login successful' });
     });
   } catch (error) {
     console.error('Error in login:', error);
