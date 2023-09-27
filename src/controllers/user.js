@@ -1,17 +1,21 @@
 const userModel = require('../models/user');
+const jwtConfig = require('../config/jwt');
 const jwt = require('jsonwebtoken');
 
-const registerUser = (req, res) => {
+const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
     if (!username || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
     }
-    userModel.createUser(username, email, password, (err) => {
+    
+
+    userModel.createUser(username, email, password, (err, results) => {
       if (err) {
-        console.error('Error inserting user data:', err);
+        console.error('Error in createUser:', err);
         return res.status(500).json({ error: 'Internal server error' });
       }
+
       console.log('User registered successfully');
       res.status(201).json({ message: 'User registered successfully' });
     });
@@ -21,22 +25,27 @@ const registerUser = (req, res) => {
   }
 };
 
-const loginUser = (req, res) => {
+
+const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
+
     userModel.getUserByUsernameAndPassword(username, password, (err, results) => {
       if (err) {
-        console.error('Error querying user data:', err);
+        console.error('Error in getUserByUsernameAndPassword:', err);
         return res.status(500).json({ error: 'Internal server error' });
       }
+
       if (results.length === 0) {
         return res.status(401).json({ error: 'User not found or incorrect password' });
       }
 
-      const user = {username: results[0].username,};
-      const token = jwt.sign(user, 'secret', { expiresIn: '1h' });
+      const user = { username: results[0].username };
+      const token = jwt.sign(user, jwtConfig.secretKey, { expiresIn: jwtConfig.expiresIn });
+
       res.json({
-          message: 'Login successful', token: token,
+        message: 'Login successful',
+        token: token,
       });
       console.log('Login successful');
     });
@@ -45,6 +54,7 @@ const loginUser = (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 module.exports = {
   registerUser,
