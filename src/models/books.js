@@ -13,6 +13,23 @@ const getBooksForUser = (userId, callback) => {
     } callback(null, results); });
 };
 
+const getBookDetailsById = (bookId) => {
+  return new Promise((resolve, reject) => {
+    const selectQuery = 'SELECT * FROM books WHERE id = ?';
+    db.query(selectQuery, [bookId], (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        if (results.length === 0) {
+          resolve(null); 
+        } else {
+          resolve(results[0]); 
+        }}
+    });
+  });
+};
+
 module.exports = {
   getBooksForUser,
+  getBookDetailsById,
 };
