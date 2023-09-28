@@ -15,7 +15,16 @@ const getUserByUsernameAndPassword = (username, password, callback) => {
   });
 };
 
+const getUserByUsername = (username, callback) => {
+  const query = 'SELECT * FROM signup WHERE username = ?';
+  db.query(query, [username], (err, results) => {
+    if (err) { callback(err, null); 
+    } else {callback(null, results);}
+  });
+};
+
 module.exports = {
   createUser,
   getUserByUsernameAndPassword,
+  getUserByUsername,
 };
