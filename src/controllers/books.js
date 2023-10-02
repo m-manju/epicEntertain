@@ -2,7 +2,7 @@ const booksModel = require('../models/books');
 
 const fetchBooksForUser = async (req, res) => {
   try {
-    const userId = req.body;
+    const userId = req.user;
     const results = await new Promise((resolve, reject) => {
       booksModel.getBooksForUser(userId, (err, results) => {
         if (err) {
@@ -40,4 +40,3 @@ module.exports = {
   fetchBooksForUser,
   getBookDetailsById,
 }
-
