@@ -25,6 +25,7 @@ const updateSubscriptionPlan = (userId, subscriptionTypeId, callback) => {
 
 };
 
+
 const getActiveSubscription = (userId, callback) => {
   const selectQuery = `
     SELECT subscription_start, subscription_end
@@ -35,23 +36,38 @@ const getActiveSubscription = (userId, callback) => {
     if (err) {
       return callback(err, null);
     }
-    callback(null, results[0]);
+
+    const subscription = results[0];
+    if (!subscription) {
+      return callback(null, null);
+    }
+
+    const currentDate = new Date();
+    const endDate = new Date(subscription.subscription_end);
+    const remainingDays = Math.max(0, Math.ceil((endDate - currentDate) / (1000 * 60 * 60 * 24)));
+    const hasExpired = endDate < currentDate;
+
+    callback(null, {
+      subscription_start: subscription.subscription_start,
+      subscription_end: subscription.subscription_end,
+      remaining_days: remainingDays,
+      has_expired: hasExpired,
+    });
   });
 };
 
-const updateUserSubscription = (username, subscriptionTypeId) => {
+const updateUserSubscription = (username, subscriptionTypeId, subscriptionEndDate) => {
   return new Promise((resolve, reject) => {
     const updateQuery = `
       UPDATE signup
       SET
         bought = 1,
         subscription_type_id = ?,
-        subscription_start = NOW(), -- Set subscription start date
-        subscription_end = DATE_ADD(NOW(), INTERVAL 30 DAY) -- Set subscription end date (e.g., 30 days from now)
-      WHERE
-        username = ?`;
+        subscription_start = NOW(),
+        subscription_end = ?
+      WHERE username = ?`;
 
-    db.query(updateQuery, [subscriptionTypeId, username], (err, results) => {
+    db.query(updateQuery, [subscriptionTypeId, subscriptionEndDate, username], (err, results) => {
       if (err) {
         console.error('Error updating subscription:', err);
         reject(err);
@@ -61,6 +77,8 @@ const updateUserSubscription = (username, subscriptionTypeId) => {
     });
   });
 };
+
+
 
 module.exports = {
   getAvailableSubscriptions,

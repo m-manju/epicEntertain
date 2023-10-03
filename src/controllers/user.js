@@ -28,7 +28,6 @@ const registerUser = async (req, res) => {
           console.error('Error inserting user data:', err);
           return res.status(500).json({ error: 'Internal server error' });
         }
-
         console.log('User registered successfully');
         res.status(201).json({ message: 'User registered successfully' });
       });

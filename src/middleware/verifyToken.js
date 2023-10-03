@@ -9,7 +9,6 @@ const verifyToken = (req, res, next) => {
   }
 
   const token = authHeader.split(' ')[1]; 
-
   jwt.verify(token, jwtConfig.secretKey, (err, decoded) => {
     if (err) {
       console.error('JWT verification error:', err);
