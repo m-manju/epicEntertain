@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-
     if (!username || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
     }
@@ -15,14 +14,11 @@ const registerUser = async (req, res) => {
         console.error('Error querying signup data:', err);
         return res.status(500).json({ error: 'Internal server error' });
       }
-
       console.log('Existing User:', existingUser);
-
       if (existingUser && existingUser.length > 0) {
         console.log('Username already exists');
         return res.status(400).json({ error: 'Username already exists' });
       }
-
       userModel.createUser(username, email, password, (err) => {
         if (err) {
           console.error('Error inserting user data:', err);

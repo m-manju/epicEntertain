@@ -1,36 +1,39 @@
 const db = require('../config/db');
 
-const getBooksForUser = (userId, callback) => {
-  const selectQuery = `
-  select books.id, books.name as 'book name',
-  authors.name as 'author name', authors.bio as 'author bio',
-  description,isbn,publication_year  
-  from books join authors on books.author_id = authors.id;`;
-
-  db.query(selectQuery, [userId], (err, results) => {
-    if (err) {
-      return callback(err);
-    } callback(null, results); });
+const getBooksForUser = async () => {
+  try {
+    const selectQuery = `
+      SELECT books.id, books.name as 'book name',
+      authors.name as 'author name', authors.bio as 'author bio',
+      description, isbn, publication_year  
+      FROM books
+      JOIN authors ON books.author_id = authors.id;`;
+    const rows = await db.query(selectQuery);
+    console.log(rows,"helo");
+    return rows;
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
 };
 
-const getBookDetailsById = (bookId) => {
-  return new Promise((resolve, reject) => {
+
+const getBookDetailsById = async (bookId) => {
+  try {
     const selectQuery = 'SELECT * FROM books WHERE id = ?';
-    db.query(selectQuery, [bookId], (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        if (results.length === 0) {
-          resolve(null); 
-        } else {
-          resolve(results[0]); 
-        }}
-    });
-  });
+    const results = await db.query(selectQuery, [bookId]);
+    if (results.length === 0) {
+      return null;
+    } else {
+      return results[0];
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
 };
 
 module.exports = {
   getBooksForUser,
   getBookDetailsById,
 };
-
