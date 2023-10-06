@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const booksRoutes = require('./routes/booksRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes'); 
+const adminRoutes = require('./admin/routes/adminRoutes');
+const adminBooksRoutes = require('./admin/routes/booksRoutes');
 
 
 const app = express();
@@ -16,6 +18,8 @@ app.use('/books', booksRoutes);
 app.use('/subscriptions', subscriptionRoutes);
 app.use('/subscription-plans', subscriptionRoutes);
 
+app.use('/admin', adminRoutes);
+app.use('/adminBooks', adminBooksRoutes); 
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
