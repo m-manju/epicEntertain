@@ -13,7 +13,6 @@ const getAvailableSubscriptions = async (req, res) => {
 
 const getActiveSubscription = async (req, res) => {
   const { userId } = req.params;
-
   try {
     const subscriptions = await subscriptionModel.getActiveSubscription(userId);
     if (!subscriptions) {
@@ -33,7 +32,7 @@ const getActiveSubscription = async (req, res) => {
     if (hasExpired) {
       responseObject.renew_now = 'Renew Now';
     }
-
+    console.log("getActiveSubscription", responseObject )
     res.json(responseObject);
   } catch (error) {
     console.error('Error in getActiveSubscription:', error);
@@ -51,24 +50,18 @@ const updateUserSubscription = async (req, res) => {
   try {
     const { username } = req.user;
     const { subscriptionType } = req.body;
-
     const numberOfDays = subscriptionDurations[subscriptionType];
     if (numberOfDays === undefined) {
       return res.status(400).json({ error: 'Invalid subscription type' });
     }
-
     const subscriptionEndDate = new Date();
     subscriptionEndDate.setDate(subscriptionEndDate.getDate() + numberOfDays);
     const updatedSubscription = await subscriptionModel.updateUserSubscription(
-      username,
-      subscriptionType,
-      subscriptionEndDate,
-      numberOfDays 
-    );
-
+      username, subscriptionType, subscriptionEndDate, numberOfDays);
     if (!updatedSubscription) {
       return res.status(404).json({ error: 'User not found' });
     }
+    console.log("Subscription updated successfully")
     res.status(200).json({ message: 'Subscription updated successfully' });
   } catch (error) {
     console.error('Error updating user subscription:', error);

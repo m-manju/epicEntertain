@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const pool = require('./config/db'); 
 const authRoutes = require('./routes/authRoutes');
 const booksRoutes = require('./routes/booksRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes'); 
@@ -21,3 +20,4 @@ app.use('/subscription-plans', subscriptionRoutes);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+

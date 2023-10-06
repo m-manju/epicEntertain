@@ -8,7 +8,6 @@ const registerUser = async (req, res) => {
     if (!username || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
     }
-
     userModel.getUserByUsername(username, (err, existingUser) => {
       if (err) {
         console.error('Error querying signup data:', err);

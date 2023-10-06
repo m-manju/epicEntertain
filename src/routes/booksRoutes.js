@@ -7,4 +7,7 @@ router.get('/books',verifyToken, booksController.fetchBooksForUser);
 
 router.get('/:bookId', verifyToken, booksController.getBookDetailsById);
 
+router.post('/add-book',verifyToken, booksController.upload.single('image'), booksController.addBookWithImage);
+
+
 module.exports = router;

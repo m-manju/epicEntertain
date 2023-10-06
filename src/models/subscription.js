@@ -19,15 +19,12 @@ const subscriptionDurations = {
 
 const updateUserSubscription = async (username, subscriptionType) => {
   try {  
-    const getTypeIdQuery = `
-      SELECT id
-      FROM subscription_type
-      WHERE type = ?`;
+    const getTypeIdQuery = `SELECT id
+      FROM subscription_type WHERE type = ?`;
     const subscriptionTypeIdResult = await db.query(getTypeIdQuery, [subscriptionType]);
     
     const subscriptionTypeId = subscriptionTypeIdResult[0].id;
-    const selectQuery = `
-      SELECT COUNT(*) as count
+    const selectQuery = ` SELECT COUNT(*) as count
       FROM subscriptions
       INNER JOIN signup ON signup.id = subscriptions.signup_id
       WHERE signup.username = ?`;
@@ -43,8 +40,7 @@ const updateUserSubscription = async (username, subscriptionType) => {
       const insertResult = await db.query(insertQuery, [subscriptionTypeId, numberOfDays, username]);
       return insertResult;
     } else {
-      const updateQuery = `
-        UPDATE subscriptions
+      const updateQuery = ` UPDATE subscriptions
         INNER JOIN signup ON signup.id = subscriptions.signup_id
         SET subscriptions.type_id = ?,
           subscriptions.start_date = NOW(),
@@ -63,18 +59,13 @@ const updateUserSubscription = async (username, subscriptionType) => {
 
 const getActiveSubscription = async (userId) => {
   try {
-    const selectQuery = `
-      SELECT start_date, end_date
-      FROM subscriptions
-      WHERE id = ? AND type_id IS NOT NULL`;
+    const selectQuery = ` SELECT start_date, end_date
+      FROM subscriptions WHERE id = ? AND type_id IS NOT NULL`;
 
     const results = await db.query(selectQuery, [userId]);
     if (!results || results.length === 0) 
     {
       return {
-        subscriptions_start: null,
-        subscriptions_end: null,
-        remaining_days: 0,
         has_expired: true,
       };
     }
