@@ -2,10 +2,9 @@ const path = require('path');
 const multer = require('multer');
 const booksModel = require('../models/books');
 
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'src/public/images/'); 
+    cb(null, 'src/public/images/');
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -23,8 +22,8 @@ const addBookWithImage = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: 'Image file is required' });
     }
-    const imageUrl = req.file.path; 
-    const bookId = await booksModel.addBook(name, description, author_id, isbn, publication_year, imageUrl); 
+    const imageUrl = req.file.path;
+    const bookId = await booksModel.addBook(name, description, author_id, isbn, publication_year, imageUrl);
     console.log('Book added successfully');
     res.status(201).json({ message: 'Book added successfully', bookId });
   } catch (error) {
@@ -82,4 +81,4 @@ module.exports = {
   upload,
   editBook,
   deleteBook,
-}
+};

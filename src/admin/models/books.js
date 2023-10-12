@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
-const db = require('../../config/db');
 
+const db = require('../../config/db');
 
 const getBookDetailsById = async (bookId) => {
   try {
@@ -53,7 +53,6 @@ const deleteBook = async (bookId) => {
     throw error;
   }
 };
-
 
 module.exports = {
   addBook,

@@ -7,8 +7,7 @@ const getBooksForUser = async () => {
       SELECT book.id, book.name as 'book name',
       authors.name as 'author name', authors.bio as 'author bio',
       description, isbn, publication_year  
-      FROM book
-      JOIN authors ON book.author_id = authors.id;`;
+      FROM book JOIN authors ON book.author_id = authors.id;`;
     const rows = await db.query(selectQuery);
     console.log(rows,"helo");
     return rows;

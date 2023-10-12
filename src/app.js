@@ -6,7 +6,6 @@ const subscriptionRoutes = require('./routes/subscriptionRoutes');
 const adminRoutes = require('./admin/routes/adminRoutes');
 const adminBooksRoutes = require('./admin/routes/booksRoutes');
 
-
 const app = express();
 const port = 3001;
 
@@ -24,4 +23,3 @@ app.use('/adminBooks', adminBooksRoutes);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-

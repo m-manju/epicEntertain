@@ -17,7 +17,6 @@ const getAdminByNameAndPassword = (full_name, password, callback) => {
   }
 };
 
-
 module.exports = {
   getAdminByNameAndPassword,
 };

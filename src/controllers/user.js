@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 
 const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    if (!username || !email || !password) {
+    const { username, email, password} = req.body;
+    if (!username || !email || !password ) {
       return res.status(400).json({ error: 'All fields are required' });
     }
     userModel.getUserByUsername(username, (err, existingUser) => {
@@ -18,7 +18,7 @@ const registerUser = async (req, res) => {
         console.log('Username already exists');
         return res.status(400).json({ error: 'Username already exists' });
       }
-      userModel.createUser(username, email, password, (err) => {
+      userModel.createUser(username, email, password ,(err) => {
         if (err) {
           console.error('Error inserting user data:', err);
           return res.status(500).json({ error: 'Internal server error' });
@@ -28,7 +28,7 @@ const registerUser = async (req, res) => {
       });
     });
   } catch (error) {
-    console.error('Error in signup:', error);
+    console.error('Error in registerUser:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -36,24 +36,30 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
-    userModel.getUserByUsernameAndPassword(username, password, (err, results) => {
+    userModel.getUserByUsername(username, async (err, user) => {
       if (err) {
         console.error('Error querying signup data:', err);
         return res.status(500).json({ error: 'Internal server error' });
       }
-      if (results.length === 0) {
-        return res.status(401).json({ error: 'User not found or incorrect password' });
+      if (!user || user.length === 0) {
+        console.log('User not found');
+        return res.status(401).json({ error: 'User not found' });
       }
-      const user = { username: results[0].username };
-      const token = jwt.sign(user, jwtConfig.secretKey, { expiresIn: jwtConfig.expiresIn });
-      res.json({
-        message: 'Login successful',
-        token: token,
-      });
-      console.log('Login successful');
+      if (user[0].password === password) {
+        const tokenUser = { username: user[0].username, email: user[0].email, id: user[0].id };
+        const token = jwt.sign(tokenUser, jwtConfig.secretKey, { expiresIn: jwtConfig.expiresIn });
+        console.log('Login successful');
+        res.json({
+          message: 'Login successful',
+          token: token,
+        });
+      } else {
+        console.log('Incorrect password');
+        res.status(401).json({ error: 'Incorrect password' });
+      }
     });
   } catch (error) {
-    console.error('Error in login:', error);
+    console.error('Error in loginUser:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

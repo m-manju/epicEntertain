@@ -1,7 +1,6 @@
 /* eslint-disable no-useless-catch */
 const db = require('../config/db');
 const util = require('util');
-const queryAsync = util.promisify(db.query);
 
 const createUser = (username, email, password, callback) => {
   try {

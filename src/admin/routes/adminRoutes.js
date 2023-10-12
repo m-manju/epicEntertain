@@ -4,6 +4,4 @@ const { loginAdmin } = require('../controllers/admin');
 
 router.post('/loginAdmin', loginAdmin);
 
-
 module.exports = router;
-
