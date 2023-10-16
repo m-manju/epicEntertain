@@ -22,9 +22,9 @@ const checkAdminExists = async (full_name) => {
   return results.length > 0;
 };
 
-const addAdmin = async (full_name, password, role_id) => {
-  const insertQuery = 'INSERT INTO admins (full_name, email, password, role_id) VALUES (?, ?, ?, 2)';
-  const result = await db.query(insertQuery, [ full_name, password, role_id]);
+const addAdmin = async (full_name,email, password, role_id) => {
+  const insertQuery = 'INSERT INTO admins (full_name, email, password, role_id) VALUES (?, ?, ?,?)';
+  const result = await db.query(insertQuery, [ full_name,email, password, role_id]);
   return result.insertId;
 };
 

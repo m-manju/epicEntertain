@@ -9,10 +9,8 @@ const deletePlan = async (req, res) => {
       if (!affectedUsers) {
         return res.status(500).json({ error: 'Failed to retrieve affected users' });
       }
-  
       if (affectedUsers.length === 0) {
         const result = await subscriptionModel.deletePlan(planId);
-  
         if (result) {
           console.log('Subscription plan deleted successfully');
           res.status(200).json({ message: 'Subscription plan deleted successfully' });
@@ -44,7 +42,6 @@ const deletePlan = async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   };
-
 
   const createNewPlan = async (req, res) => {
     try {

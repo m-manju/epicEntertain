@@ -56,7 +56,6 @@ const updateUserSubscription = async (username, subscriptionType) => {
   }
 };
 
-
 const getActiveSubscription = async (userId) => {
   try {
     const selectQuery = ` SELECT start_date, end_date
@@ -84,7 +83,6 @@ const getActiveSubscription = async (userId) => {
     throw error;
   }
 };
-
 
 module.exports = {
   getAvailableSubscriptions,

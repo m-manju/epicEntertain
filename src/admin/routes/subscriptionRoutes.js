@@ -10,3 +10,4 @@ router.delete('/delete-plan/:planId', verifyToken, verifyRole, verifyAccess, sub
 router.post('/create-plan', verifyToken, subscriptionController.createNewPlan);
 
 module.exports = router;
+

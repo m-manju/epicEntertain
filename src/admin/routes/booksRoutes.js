@@ -13,8 +13,8 @@ router.put('/edit/:bookId', verifyToken, booksController.editBook);
 
 router.delete('/delete/:bookId',verifyToken, verifyRole, verifyacess, booksController.deleteBook);
 
-module.exports = router;
 
+module.exports = router;
 
 
 
