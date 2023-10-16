@@ -17,14 +17,16 @@ const storage = multer.diskStorage({
 const imageFilter = (req, file, cb) => {
   const fileSize = parseInt(req.headers["content-length"])
 
-  if ((file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") && fileSize <= 2 * 1024 * 1024) {
+  if ((file.mimetype === "image/png" || file.mimetype === "image/jpeg") && fileSize <= 2 * 1024 * 1024) {
       cb(null, true)
   } else {
-      cb(null, false)
+      console.log('image size should not be more than 2mb');
+      cb('Invalid file. Only png and jpeg images (up to 2MB) are allowed.');
+ 
   }
 }
 
 const upload = multer({ storage: storage, fileFilter: imageFilter });
 
-
 module.exports = upload;
+

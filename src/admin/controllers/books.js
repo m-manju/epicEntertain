@@ -6,7 +6,7 @@ const addBookWithImage = async (req, res) => {
   try {
     const { name, description, author_id, isbn, publication_year } = req.body;
     if (!req.file) {
-      return res.status(400).json({ error: 'Image file is required' });
+      return res.status(400).json({ error: 'Image file is required or image size should not be more than 2 Mb' });
     }
     const imageUrl = req.file.path;
     const bookId = await booksModel.addBook(name, description, author_id, isbn, publication_year, imageUrl);
