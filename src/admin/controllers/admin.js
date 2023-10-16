@@ -27,6 +27,34 @@ const loginAdmin = async (req, res) => {
   }
 };
 
+
+const addAdmin = async (req, res) => {
+  try {
+
+    const { full_name,email, password } = req.body;
+    const adminExists = await userAdmin.checkAdminExists(full_name);
+
+    if (adminExists) {
+      return res.status(400).json({ error: 'Admin with the same name already exists' });
+    }
+    const result = await userAdmin.addAdmin( full_name,email, password, 2);
+    if (result) {
+      console.log('New admin added successfully');
+      res.status(201).json({ message: 'New admin added successfully' });
+    }
+  } catch (error) {
+    console.error('Error adding new admin:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = {
+  addAdmin,
+};
+
+
+
 module.exports = {
   loginAdmin,
+  addAdmin
 };

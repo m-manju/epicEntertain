@@ -32,8 +32,20 @@ const deletePlan = async (planId) => {
   }
 };
 
+
+const createSubscriptionPlan = async (type, details, price,duration) => {
+    try {
+      const insertQuery = 'INSERT INTO subscription_type (type, details, price,duration) VALUES ( ?, ?, ?,?)';
+      const result = await db.query(insertQuery, [type, details, price, duration]);
+      return result.insertId;
+    } catch (error) {
+      throw error;
+    }
+  };
+
 module.exports = {
   getAffectedUsers,
   transferUsersToNewPlan,
   deletePlan,
+  createSubscriptionPlan,
 };

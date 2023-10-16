@@ -1,7 +1,6 @@
 /* eslint-disable no-useless-catch */
 const db = require('../../config/db');
 const util = require('util');
-const queryAsync = util.promisify(db.query);
 
 const getAdminByNameAndPassword = (full_name, password, callback) => {
   try {
@@ -17,6 +16,21 @@ const getAdminByNameAndPassword = (full_name, password, callback) => {
   }
 };
 
+const checkAdminExists = async (full_name) => {
+  const selectQuery = 'SELECT * FROM admins WHERE full_name = ?';
+  const results = await db.query(selectQuery, [full_name]);
+  return results.length > 0;
+};
+
+const addAdmin = async (full_name, password, role_id) => {
+  const insertQuery = 'INSERT INTO admins (full_name, email, password, role_id) VALUES (?, ?, ?, 2)';
+  const result = await db.query(insertQuery, [ full_name, password, role_id]);
+  return result.insertId;
+};
+
+
 module.exports = {
   getAdminByNameAndPassword,
+  checkAdminExists,
+  addAdmin,
 };
