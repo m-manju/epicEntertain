@@ -1,7 +1,6 @@
 const path = require('path');
 const multer = require('multer');
 const booksModel = require('../models/books');
-const checkAdminPermission = require('../middleware/checkAdminPermission');
 
 const fetchBooksForUser = async (req, res) => {
   try {
