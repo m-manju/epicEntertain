@@ -16,11 +16,11 @@ const getAdminByNameAndPassword = (full_name, password, callback) => {
   }
 };
 
-const checkAdminExists = async (full_name) => {
-  const selectQuery = 'SELECT * FROM admins WHERE full_name = ?';
-  const results = await db.query(selectQuery, [full_name]);
-  return results.length > 0;
-};
+// const checkAdminExists = async (full_name) => {
+//   const selectQuery = 'SELECT * FROM admins WHERE full_name = ?';
+//   const results = await db.query(selectQuery, [full_name]);
+//   return results.length > 0;
+// };
 
 const addAdmin = async (full_name,email, password, role_id) => {
   const insertQuery = 'INSERT INTO admins (full_name, email, password, role_id) VALUES (?, ?, ?,?)';
@@ -31,6 +31,6 @@ const addAdmin = async (full_name,email, password, role_id) => {
 
 module.exports = {
   getAdminByNameAndPassword,
-  checkAdminExists,
+  // checkAdminExists,
   addAdmin,
 };
