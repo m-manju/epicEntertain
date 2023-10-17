@@ -7,11 +7,11 @@ const checkUserRole = require('../../middleware/checkUserRoles');
 const checkAdminPermissions = require('../../middleware/checkPermissions');
 
 
-router.post('/add-book', verifyToken, checkUserRole([1]),  upload.single('image'), booksController.addBookWithImage);
+router.post('/add-book', verifyToken, checkAdminPermissions([1]),  upload.single('image'), booksController.addBookWithImage);
 
-router.post('/add-books-from-excel', verifyToken, checkUserRole([1]), upload.single('excel'), booksController.addBooksFromExcel); 
+router.post('/add-books-from-excel', verifyToken, checkAdminPermissions([1]), upload.single('excel'), booksController.addBooksFromExcel); 
 
-router.put('/edit/:bookId', verifyToken, checkUserRole([2]), booksController.editBook);
+router.put('/edit/:bookId', verifyToken, checkAdminPermissions([2]), booksController.editBook);
 
 router.delete('/delete/:bookId', verifyToken, checkAdminPermissions([3]), booksController.deleteBook);
 
