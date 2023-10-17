@@ -25,3 +25,5 @@ app.use('/adminSubscriptions', adminSubscriptionRoutes);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+

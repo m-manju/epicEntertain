@@ -32,7 +32,6 @@ const checkUserRole = (allowedRoles) => {
   };
   
 
-
 module.exports = checkUserRole;
   
 
