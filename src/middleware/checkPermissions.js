@@ -12,7 +12,6 @@ const checkAdminPermissions = (requiredPermissions) => {
           return res.status(403).json({ error: 'Permission denied' });
         }
       }
-
       next();
     } catch (error) {
       console.error('Error checking admin permissions:', error);
@@ -20,5 +19,7 @@ const checkAdminPermissions = (requiredPermissions) => {
     }
   };
 };
+
+
 
 module.exports = checkAdminPermissions;
