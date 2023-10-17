@@ -1,4 +1,3 @@
-// const adminsModel = require('../models/middleware');
 const userAdmin = require('../admin/models/admin');
 
 const checkAdminPermissions = (requiredPermissions) => {
