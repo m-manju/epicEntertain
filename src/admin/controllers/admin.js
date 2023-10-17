@@ -31,6 +31,7 @@ const loginAdmin = async (req, res) => {
 const addAdmin = async (req, res) => {
   try {
     const { full_name,email, password, role_id } = req.body;
+    console.log(req.body);
     const adminExists = await userAdmin.checkAdminExists(full_name);
     if (adminExists) {
       return res.status(400).json({ error: 'Admin with the same name already exists' });

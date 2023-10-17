@@ -1,6 +1,32 @@
 const path = require('path');
 const booksModel = require('../models/books');
 const upload = require('../../config/multer');
+const xlsx = require('xlsx');
+
+const addBooksFromExcel = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'Excel file is required' });
+    }
+    const excelFile = req.file.path;
+    const workbook = xlsx.readFile(excelFile); 
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const bookData = xlsx.utils.sheet_to_json(sheet);
+    if (bookData.length === 0) {
+      return res.status(400).json({ error: 'Excel file is empty' });
+    }
+    for (const book of bookData) {
+      const { name, description, author_id, isbn, publication_year, image_url } = book;
+      const bookId = await booksModel.addBook(name, description, author_id, isbn, publication_year, image_url);
+    }
+    console.log('Books added successfully from Excel');
+    res.status(201).json({ message: 'Books added successfully from Excel' });
+  } catch (error) {
+    console.error('Error adding books from Excel:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 const addBookWithImage = async (req, res) => {
   try {
@@ -63,6 +89,7 @@ const deleteBook = async (req, res) => {
 };
 
 module.exports = {
+  addBooksFromExcel,
   addBookWithImage,
   upload,
   editBook,

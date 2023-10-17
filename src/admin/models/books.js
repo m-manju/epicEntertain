@@ -17,13 +17,13 @@ const getBookDetailsById = async (bookId) => {
   }
 };
 
-const addBook = async (name, description, author_id, isbn, publication_year, imageUrl) => {
+const addBook = async (name, description, author_id, isbn, publication_year, image_url) => {
   try {
     const insertQuery = `
       INSERT INTO book (name, description, author_id, isbn, publication_year, image_url)
       VALUES (?, ?, ?, ?, ?, ?);
     `;
-    const result = await db.query(insertQuery, [name, description, author_id, isbn, publication_year, imageUrl]);
+    const result = await db.query(insertQuery, [name, description, author_id, isbn, publication_year, image_url]);
     return result.insertId;
   } catch (error) {
     throw error;
