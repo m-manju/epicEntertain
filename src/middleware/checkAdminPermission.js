@@ -1,7 +1,3 @@
-const jwt = require('jsonwebtoken');
-const jwtConfig = require('../config/jwt');
-const db = require('../config/db');
-
 
 const checkAdminPermission = (req, res, next) => {
     if (req.user.role_id === 1) {
