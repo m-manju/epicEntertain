@@ -3,18 +3,34 @@ const { log } = require('console');
 const db = require('../../config/db');
 const util = require('util');
 
-const getAdminByNameAndPassword = async (full_name, password) => {
-  return new Promise((resolve, reject) => {
+// const getAdminByNameAndPassword = async (full_name, password) => {
+//   return new Promise((resolve, reject) => {
+//     const selectQuery = 'SELECT * FROM admins WHERE full_name = ? AND password = ?';
+//     db.query(selectQuery, [full_name, password], (err, results) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(results);
+//       }
+//     });
+//   });
+// };
+
+const getAdminByNameAndPassword = (full_name, password, callback) => {
+  try {
     const selectQuery = 'SELECT * FROM admins WHERE full_name = ? AND password = ?';
     db.query(selectQuery, [full_name, password], (err, results) => {
       if (err) {
-        reject(err);
-      } else {
-        resolve(results);
+        return callback(err, null);
       }
+      callback(null, results);
     });
-  });
+  } catch (error) {
+    callback(error, null);
+  }
 };
+
+
 
 const checkAdminExists = async (full_name) => {
   try {
@@ -51,8 +67,7 @@ const assignPermissions = async (adminId, permissions) => {
 const getAdminPermissions = async (full_name) => {
   try {
     const selectQuery = 
-  `SELECT ap.permission_id
-    FROM admin_permissions AS ap
+  `SELECT ap.permission_id FROM admin_permissions AS ap
     INNER JOIN admins AS a ON ap.admin_id = a.id
     WHERE a.full_name = ?`;
     const rows = await db.query(selectQuery, [full_name]);
