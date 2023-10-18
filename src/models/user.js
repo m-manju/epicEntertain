@@ -1,47 +1,37 @@
 /* eslint-disable no-useless-catch */
+
 const db = require('../config/db');
 const util = require('util');
 
-const createUser = (username, email, password, callback) => {
+const query = util.promisify(db.query).bind(db);
+
+const createUser = async (username, email, password) => {
   try {
-    const insertQuery = 'INSERT INTO signup (username, email, password) VALUES (?, ?, ?)';
-    db.query(insertQuery, [username, email, password], (err, results) => {
-      if (err) {
-        return callback(err, null);
-      }
-      callback(null, results);
-    });
+    const insertQuery = 'INSERT INTO signup (username, email, password) VALUES (?, ?, ?';
+    const results = await query(insertQuery, [username, email, password]);
+    return results;
   } catch (error) {
-    callback(error, null);
+    throw error;
   }
 };
 
-const getUserByUsernameAndPassword = (username, password, callback) => {
+const getUserByUsernameAndPassword = async (username, password) => {
   try {
     const selectQuery = 'SELECT * FROM signup WHERE username = ? AND password = ?';
-    db.query(selectQuery, [username, password], (err, results) => {
-      if (err) {
-        return callback(err, null);
-      }
-      callback(null, results);
-    });
+    const results = await query(selectQuery, [username, password]);
+    return results;
   } catch (error) {
-    callback(error, null);
+    throw error;
   }
 };
 
-const getUserByUsername = (username, callback) => {
+const getUserByUsername = async (username) => {
   try {
     const query = 'SELECT * FROM signup WHERE username = ?';
-    db.query(query, [username], (err, results) => {
-      if (err) {
-        callback(err, null);
-      } else {
-        callback(null, results);
-      }
-    });
+    const results = await query(query, [username]);
+    return results;
   } catch (error) {
-    callback(error, null);
+    throw error;
   }
 };
 
