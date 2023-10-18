@@ -17,7 +17,6 @@ const getBooksForUser = async () => {
   }
 };
 
-
 const getBookDetailsById = async (bookId) => {
   try {
     const selectQuery = 'SELECT * FROM book WHERE id = ?';
