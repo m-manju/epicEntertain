@@ -3,34 +3,15 @@ const { log } = require('console');
 const db = require('../../config/db');
 const util = require('util');
 
-// const getAdminByNameAndPassword = async (full_name, password) => {
-//   return new Promise((resolve, reject) => {
-//     const selectQuery = 'SELECT * FROM admins WHERE full_name = ? AND password = ?';
-//     db.query(selectQuery, [full_name, password], (err, results) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         resolve(results);
-//       }
-//     });
-//   });
-// };
-
-const getAdminByNameAndPassword = (full_name, password, callback) => {
+const getAdminByNameAndPassword = async (full_name, password) => {
   try {
     const selectQuery = 'SELECT * FROM admins WHERE full_name = ? AND password = ?';
-    db.query(selectQuery, [full_name, password], (err, results) => {
-      if (err) {
-        return callback(err, null);
-      }
-      callback(null, results);
-    });
+    const results = await db.query(selectQuery, [full_name, password]);
+    return results;
   } catch (error) {
-    callback(error, null);
+    throw error;
   }
 };
-
-
 
 const checkAdminExists = async (full_name) => {
   try {
