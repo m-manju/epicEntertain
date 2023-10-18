@@ -1,4 +1,5 @@
-const mysql = require('mysql');
+/* eslint-disable no-empty */
+const mysql = require('mysql2');
 const util = require('util');
 
 const con = mysql.createConnection({
@@ -7,18 +8,10 @@ const con = mysql.createConnection({
   password: '1234',
   database: 'manju',
 });
-
 const query = util.promisify(con.query).bind(con);
-
-con.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-    return;
-  }
-  console.log('Connected to MySQL database');
-});
 
 module.exports = {
   con,
   query,
 };
+
