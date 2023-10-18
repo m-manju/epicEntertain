@@ -1,65 +1,69 @@
 /* eslint-disable no-useless-catch */
+const { log } = require('console');
 const db = require('../../config/db');
 const util = require('util');
 
-const getAdminByNameAndPassword = (full_name, password, callback) => {
-  try {
+const getAdminByNameAndPassword = async (full_name, password) => {
+  return new Promise((resolve, reject) => {
     const selectQuery = 'SELECT * FROM admins WHERE full_name = ? AND password = ?';
     db.query(selectQuery, [full_name, password], (err, results) => {
       if (err) {
-        return callback(err, null);
+        reject(err);
+      } else {
+        resolve(results);
       }
-      callback(null, results);
     });
-  } catch (error) {
-    callback(error, null);
-  }
+  });
 };
 
 const checkAdminExists = async (full_name) => {
-  const selectQuery = 'SELECT * FROM admins WHERE full_name = ?';
-  const results = await db.query(selectQuery, [full_name]);
-  return results.length > 0;
-};
-
-const addAdmin = async (full_name,email, password) => {
-  const insertQuery = 'INSERT INTO admins (full_name, email, password) VALUES (?, ?, ?,?)';
-  const result = await db.query(insertQuery, [ full_name,email, password]);
-  return result.insertId;
-};
-
-const createAdmin = async (full_name, email, password) => {
-  const insertAdminQuery = 'INSERT INTO admins (full_name, email, password) VALUES (?, ?, ?)';
-  const adminInsertResult = await db.query(insertAdminQuery, [full_name, email, password]);
-  return adminInsertResult.insertId;
-};
-
-const assignPermissions = async (adminId, permissions) => {
-  const insertPermissionQuery = 'INSERT INTO admin_permissions (admin_id, permission_id) VALUES (?, ?)';
-  for (const permissionId of permissions) {
-    await db.query(insertPermissionQuery, [adminId, permissionId]);
+  try {
+    const selectQuery = 'SELECT * FROM admins WHERE full_name = ?';
+    const results = await db.query(selectQuery, [full_name]);
+    return results.length > 0;
+  } catch (error) {
+    throw error;
   }
 };
 
-const getAdminPermissions = async (admin_id) => {
-  const selectQuery = 'SELECT permission_id FROM admin_permissions WHERE admin_id = ?';
-  const results = await db.query(selectQuery, [admin_id]);
-  console.log(results)
-  return results.map((row) => row.permission_id);
+const createAdmin = async (full_name, email, password) => {
+  try {
+    const insertAdminQuery = 'INSERT INTO admins (full_name, email, password) VALUES (?, ?, ?)';
+    const adminInsertResult = await db.query(insertAdminQuery, [full_name, email, password]);
+    return adminInsertResult.insertId;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const assignPermissions = async (adminId, permissions) => {
+  try {
+    const insertPermissionQuery = 'INSERT INTO admin_permissions (admin_id, permission_id) VALUES (?, ?)';
+    for (const permissionId of permissions) {
+      await db.query(insertPermissionQuery, [adminId, permissionId]);
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 
-const updateAdminRolePermissions = async (adminId, permissions) => {
+const getAdminPermissions = async (full_name) => {
   try {
-    await db.query('DELETE FROM admin_permissions WHERE admin_id = ?', [adminId]);
-    const insertQuery = 'INSERT INTO admin_permissions (admin_Id, permission_id) VALUES (?, ?)';
-    for (const permissionId of permissions) {
-      await db.query(insertQuery, [adminId, permissionId]);
+    const selectQuery = 
+  `SELECT ap.permission_id
+    FROM admin_permissions AS ap
+    INNER JOIN admins AS a ON ap.admin_id = a.id
+    WHERE a.full_name = ?`;
+    const rows = await db.query(selectQuery, [full_name]);
+    console.log("rows:",rows[1] ,"ddd");
+    if (Array.isArray(rows)) {
+      return rows.map((row) => row.permission_id);
+    } else {
+      return []; 
     }
-    return true; 
   } catch (error) {
-    console.error('Error updating admin role permissions:', error);
-    return false; 
+    throw error;
   }
 };
 
@@ -67,9 +71,7 @@ const updateAdminRolePermissions = async (adminId, permissions) => {
 module.exports = {
   getAdminByNameAndPassword,
   checkAdminExists,
-  addAdmin,
   createAdmin,
   assignPermissions,
   getAdminPermissions,
-  updateAdminRolePermissions,
 };

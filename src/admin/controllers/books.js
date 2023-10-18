@@ -69,13 +69,11 @@ const editBook = async (req, res) => {
 const deleteBook = async (req, res) => {
   try {
     const bookId = req.params.bookId;
-
     const existingBook = await booksModel.getBookDetailsById(bookId);
     if (!existingBook) {
       return res.status(404).json({ error: 'Book not found' });
     }
     const result = await booksModel.deleteBook(bookId);
-
     if (result) {
       console.log('Book deleted successfully');
       res.status(200).json({ message: 'Book deleted successfully' });

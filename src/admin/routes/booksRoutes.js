@@ -3,9 +3,7 @@ const router = express.Router();
 const verifyToken = require('../../middleware/verifyToken');
 const booksController = require('../controllers/books');
 const upload = require('../../config/multer');
-const checkUserRole = require('../../middleware/checkUserRoles');
 const checkAdminPermissions = require('../../middleware/checkPermissions');
-
 
 router.post('/add-book', verifyToken, checkAdminPermissions([1]),  upload.single('image'), booksController.addBookWithImage);
 
@@ -17,6 +15,4 @@ router.delete('/delete/:bookId', verifyToken, checkAdminPermissions([3]), booksC
 
 
 module.exports = router;
-
-
 

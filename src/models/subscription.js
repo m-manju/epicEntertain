@@ -22,13 +22,11 @@ const updateUserSubscription = async (username, subscriptionType) => {
     const getTypeIdQuery = `SELECT id
       FROM subscription_type WHERE type = ?`;
     const subscriptionTypeIdResult = await db.query(getTypeIdQuery, [subscriptionType]);
-    
     const subscriptionTypeId = subscriptionTypeIdResult[0].id;
     const selectQuery = ` SELECT COUNT(*) as count
       FROM subscriptions
       INNER JOIN signup ON signup.id = subscriptions.signup_id
       WHERE signup.username = ?`;
-
     const countResult = await db.query(selectQuery, [username]);
     const numberOfDays = subscriptionDurations[subscriptionType];
     if (countResult[0].count === 0) {
@@ -60,7 +58,6 @@ const getActiveSubscription = async (userId) => {
   try {
     const selectQuery = ` SELECT start_date, end_date
       FROM subscriptions WHERE id = ? AND type_id IS NOT NULL`;
-
     const results = await db.query(selectQuery, [userId]);
     if (!results || results.length === 0) 
     {

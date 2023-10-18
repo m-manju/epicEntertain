@@ -5,7 +5,6 @@ const deletePlan = async (req, res) => {
       const planId = req.params.planId;
       const newPlanId = req.body.newPlanId; 
       const affectedUsers = await subscriptionModel.getAffectedUsers(planId);
-  
       if (!affectedUsers) {
         return res.status(500).json({ error: 'Failed to retrieve affected users' });
       }
@@ -21,15 +20,12 @@ const deletePlan = async (req, res) => {
         if (!newPlanId) {
           return res.status(400).json({ error: 'New plan ID is required for affected users.' });
         }
-  
         const userIds = affectedUsers.map((user) => user.signup_id);
         const transferred = await subscriptionModel.transferUsersToNewPlan(userIds, newPlanId);
-  
         if (!transferred) {
           return res.status(500).json({ error: 'Failed to transfer users to the new plan.' });
         }
         const result = await subscriptionModel.deletePlan(planId);
-  
         if (result) {
           console.log('Subscription plan deleted successfully');
           res.status(200).json({ message: 'Subscription plan deleted successfully' });

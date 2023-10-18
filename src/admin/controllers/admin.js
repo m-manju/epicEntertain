@@ -27,34 +27,11 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-
-const addAdmin = async (req, res) => {
-  try {
-    const { full_name,email, password } = req.body;
-    console.log(req.body);
-    const adminExists = await userAdmin.checkAdminExists(full_name);
-    if (adminExists) {
-      return res.status(400).json({ error: 'Admin with the same name already exists' });
-    }
-    const result = await userAdmin.addAdmin( full_name,email, password);
-    if (result) {
-      console.log('New admin added successfully');
-      res.status(201).json({ message: 'New admin added successfully' });
-    }
-  } catch (error) {
-    console.error('Error adding new admin:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
-
 const createAdminWithPermissions = async (req, res) => {
   const { full_name, email, password, permissions } = req.body;
-
   try {
     const adminId = await userAdmin.createAdmin(full_name, email, password);
     await userAdmin.assignPermissions(adminId, permissions);
-
     res.status(201).json({ message: 'Admin created with permissions.' });
   } catch (error) {
     console.error('Error creating admin:', error);
@@ -66,7 +43,6 @@ const updateAdminRolePermissions = async (req, res) => {
   const { adminId, permissionId } = req.body;
   try {
     const updated = await userAdmin.updateAdminRolePermissions(adminId, permissionId);
-
     if (updated) {
       res.status(200).json({ message: 'Admin role permissions updated successfully' });
     } else {
@@ -81,7 +57,6 @@ const updateAdminRolePermissions = async (req, res) => {
 
 module.exports = {
   loginAdmin,
-  addAdmin,
   createAdminWithPermissions,
   updateAdminRolePermissions,
 };
