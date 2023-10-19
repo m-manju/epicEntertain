@@ -3,8 +3,7 @@ const db = require('../config/db');
 
 const getBooksForUser = async () => {
   try {
-    const selectQuery = `
-      SELECT book.id, book.name as 'book name',
+    const selectQuery = `SELECT book.id, book.name as 'book name',
       authors.name as 'author name', authors.bio as 'author bio',
       description, isbn, publication_year  
       FROM book JOIN authors ON book.author_id = authors.id;`;
