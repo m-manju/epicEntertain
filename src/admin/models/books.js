@@ -52,10 +52,8 @@ const deleteBook = async (bookId) => {
 
 const addBookWithFile = async (name, description, author_id, isbn, publication_year, book_file_url) => {
   try {
-    const insertQuery = `
-      INSERT INTO book (name, description, author_id, isbn, publication_year, book_file_url)
-      VALUES (?, ?, ?, ?, ?, ?);
-    `;
+    const insertQuery = `INSERT INTO book (name, description, author_id, isbn, publication_year, book_file_url)
+      VALUES (?, ?, ?, ?, ?, ?);`;
     const result = await db.query(insertQuery, [name, description, author_id, isbn, publication_year, book_file_url]);
     return result.insertId;
   } catch (error) {
@@ -67,7 +65,7 @@ const addBookWithFile = async (name, description, author_id, isbn, publication_y
 const getBookFileUrlById = async (bookId) => {
   try {
     const selectQuery = `SELECT book_file_url FROM book
-      WHERE id = ?;`;
+      WHERE id = ?;`
     const result = await db.query(selectQuery, [bookId]);
     if (result.length === 0) {
       return null;

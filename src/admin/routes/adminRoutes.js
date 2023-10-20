@@ -8,9 +8,9 @@ const checkAdminPermissions = require('../../middleware/checkPermissions');
 
 router.post('/loginAdmin', loginAdmin);
 
-router.post('/create-admin-with-permissions', verifyToken,checkAdminPermissions([1]), createAdminWithPermissions);
+router.post('/createAdminWithPermissions', verifyToken,checkAdminPermissions([1]), createAdminWithPermissions);
 
-router.put('/update-role-permissions', verifyToken,checkAdminPermissions([1]), updateAdminRolePermissions);
+router.put('/updateRolePermissions', verifyToken,checkAdminPermissions([1]), updateAdminRolePermissions);
 
 
 module.exports = router;
