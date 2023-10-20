@@ -2,12 +2,11 @@
 
 const db = require('../config/db');
 const util = require('util');
-
 const query = util.promisify(db.query).bind(db);
 
 const createUser = async (username, email, password) => {
   try {
-    const insertQuery = 'INSERT INTO signup (username, email, password) VALUES (?, ?, ?';
+    const insertQuery = 'INSERT INTO signup (username, email, password) VALUES (?, ?, ?)';
     const results = await query(insertQuery, [username, email, password]);
     return results;
   } catch (error) {

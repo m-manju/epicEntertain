@@ -86,10 +86,43 @@ const deleteBook = async (req, res) => {
   }
 };
 
+const addBookWithFile = async (req, res) => {
+  try {
+    const { name, description, author_id, isbn, publication_year } = req.body;
+    if (!req.file) {
+      return res.status(400).json({ error: 'Book file is required' });
+    }
+    const bookFileUrl = req.file.path;
+    const bookId = await booksModel.addBookWithFile(name, description, author_id, isbn, publication_year, bookFileUrl);
+    console.log('Book added successfully');
+    res.status(201).json({ message: 'Book added successfully', bookId });
+  } catch (error) {
+    console.error('Error adding book with file:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const getBookFile = async (req, res) => {
+  try {
+    const bookId = req.params.bookId;
+    const bookFileUrl = await booksModel.getBookFileUrlById(bookId);
+    if (!bookFileUrl) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+    res.status(200).json({ fileUrl: bookFileUrl });
+  } catch (error) {
+    console.error('Error getting book file URL:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   addBooksFromExcel,
   addBookWithImage,
   upload,
   editBook,
   deleteBook,
+  addBookWithFile,
+  getBookFile,
 };
+

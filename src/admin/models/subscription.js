@@ -1,5 +1,4 @@
 /* eslint-disable no-useless-catch */
-
 const db = require('../../config/db');
 
 const getAffectedUsers = async (planId) => {
@@ -31,7 +30,6 @@ const deletePlan = async (planId) => {
     throw error;
   }
 };
-
 
 const createSubscriptionPlan = async (type, details, price,duration) => {
     try {

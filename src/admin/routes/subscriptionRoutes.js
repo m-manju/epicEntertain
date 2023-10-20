@@ -9,4 +9,3 @@ router.delete('/delete-plan/:planId', verifyToken, checkAdminPermissions([1]), s
 router.post('/create-plan', verifyToken,checkAdminPermissions([1]), subscriptionController.createNewPlan);
 
 module.exports = router;
-

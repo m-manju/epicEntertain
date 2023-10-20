@@ -13,6 +13,10 @@ router.put('/edit/:bookId', verifyToken, checkAdminPermissions([2]), booksContro
 
 router.delete('/delete/:bookId', verifyToken, checkAdminPermissions([3]), booksController.deleteBook);
 
+router.post('/add-book-with-file',verifyToken, checkAdminPermissions([1]), upload.single('book_file'), booksController.addBookWithFile);
+
+router.get('/get-book/:bookId',verifyToken, booksController.getBookFile);
+
 
 module.exports = router;
 

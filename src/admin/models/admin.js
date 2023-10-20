@@ -1,5 +1,4 @@
 /* eslint-disable no-useless-catch */
-const { log } = require('console');
 const db = require('../../config/db');
 const util = require('util');
 

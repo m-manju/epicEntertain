@@ -33,6 +33,7 @@ const createAdminWithPermissions = async (req, res) => {
     const adminId = await userAdmin.createAdmin(full_name, email, password);
     await userAdmin.assignPermissions(adminId, permissions);
     res.status(201).json({ message: 'Admin created with permissions.' });
+    console.log('created admin with permission successfully');
   } catch (error) {
     console.error('Error creating admin:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -48,6 +49,7 @@ const updateAdminRolePermissions = async (req, res) => {
     } else {
       res.status(500).json({ error: 'Failed to update admin role permissions' });
     }
+    console.log('updation successful');
   } catch (error) {
     console.error('Error updating admin role permissions:', error);
     res.status(500).json({ error: 'Internal server error' });
