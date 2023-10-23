@@ -2,14 +2,20 @@
 const db = require('../config/db');
 
 const getAvailableSubscriptions = async () => {
+  let con;
   try {
+    con = await db.getConnection();
     const selectQuery = 'SELECT * FROM subscription_type';
     const results = await db.query(selectQuery);
     return results;
   } catch (error) {
     throw error;
+  } finally {
+    if (con) {
+      con.release(); 
+    }
   }
-}
+};
 
 const subscriptionDurations = {
   'Weekly': 7,
@@ -18,7 +24,9 @@ const subscriptionDurations = {
 };
 
 const updateUserSubscription = async (username, subscriptionType) => {
+  let con;
   try {  
+    con = await db.getConnection();
     const getTypeIdQuery = `SELECT id
       FROM subscription_type WHERE type = ?`;
     const subscriptionTypeIdResult = await db.query(getTypeIdQuery, [subscriptionType]);
@@ -51,11 +59,17 @@ const updateUserSubscription = async (username, subscriptionType) => {
     }
   } catch (error) {
     throw error;
+  } finally {
+    if (con) {
+      con.release(); 
+    }
   }
 };
 
 const getActiveSubscription = async (userId) => {
+  let con;
   try {
+    con = await db.getConnection();
     const selectQuery = ` SELECT start_date, end_date
       FROM subscriptions WHERE id = ? AND type_id IS NOT NULL`;
     const results = await db.query(selectQuery, [userId]);
@@ -78,6 +92,10 @@ const getActiveSubscription = async (userId) => {
     };
   } catch (error) {
     throw error;
+  } finally {
+    if (con) {
+      con.release(); 
+    }
   }
 };
 

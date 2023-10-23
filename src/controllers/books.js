@@ -6,10 +6,10 @@ const fetchBooksForUser = async (req, res) => {
   try {
     const books = await booksModel.getBooksForUser();
     console.log('Fetched books:', books);
-    res.json(books);
+    res.json({success: true,books} );
   } catch (error) {
     console.error('Error fetching books:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({success: false, error: 'Internal Server Error' });
   }
 };
 
@@ -21,11 +21,11 @@ const getBookDetailsById = async (req, res) => {
     if (!bookDetails) {
       return res.status(404).json({ error: 'Book is not found' });
     }
-    res.json(bookDetails);
+    res.json({success: true, bookDetails});
     console.log('fetching book details successfuly');
   } catch (error) {
     console.error('Error in fetching book details:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({success: false, error: 'Internal server error' });
   }
 };
 

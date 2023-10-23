@@ -24,12 +24,12 @@ const registerUser = async (req, res) => {
           return res.status(500).json({ error: 'Internal server error' });
         }
         console.log('User registered successfully');
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).json({success: true, message: 'User registered successfully' });
       });
     });
   } catch (error) {
     console.error('Error in registerUser:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({success: false, error: 'Internal server error' });
   }
 };
 
@@ -49,7 +49,7 @@ const loginUser = async (req, res) => {
         const tokenUser = { username: user[0].username, email: user[0].email, id: user[0].id };
         const token = jwt.sign(tokenUser, jwtConfig.secretKey, { expiresIn: jwtConfig.expiresIn });
         console.log('Login successful');
-        res.json({
+        res.json({success: true,
           message: 'Login successful',
           token: token,
         });
@@ -60,7 +60,7 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.error('Error in loginUser:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({success: false, error: 'Internal server error' });
   }
 };
 

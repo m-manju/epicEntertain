@@ -3,10 +3,10 @@ const subscriptionModel = require('../models/subscription');
 const getAvailableSubscriptions = async (req, res) => {
   try {
     const subscriptions = await subscriptionModel.getAvailableSubscriptions();
-    res.json(subscriptions);
+    res.json({success: true, subscriptions});
   } catch (error) {
     console.error('Error fetching available subscriptions:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({success: false, error: 'Internal server error' });
   }
 };
 
@@ -33,10 +33,10 @@ const getActiveSubscription = async (req, res) => {
       responseObject.renew_now = 'Renew Now';
     }
     console.log("getActiveSubscription", responseObject )
-    res.json(responseObject);
+    res.json({success: true, responseObject});
   } catch (error) {
     console.error('Error in getActiveSubscription:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ success: false, error: 'Internal server error' });
   }
 };
 
@@ -62,10 +62,10 @@ const updateUserSubscription = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     console.log("Subscription updated successfully")
-    res.status(200).json({ message: 'Subscription updated successfully' });
+    res.status(200).json({success: true, message: 'Subscription updated successfully' });
   } catch (error) {
     console.error('Error updating user subscription:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({success: false, error: 'Internal server error' });
   }
 };
 

@@ -22,6 +22,5 @@ const checkAdminPermissions = (requiredPermissions) => {
       }
     };
   };
-  
 
 module.exports = checkAdminPermissions;

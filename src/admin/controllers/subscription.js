@@ -28,14 +28,14 @@ const deletePlan = async (req, res) => {
         const result = await subscriptionModel.deletePlan(planId);
         if (result) {
           console.log('Subscription plan deleted successfully');
-          res.status(200).json({ message: 'Subscription plan deleted successfully' });
+          res.status(200).json({success: true, message: 'Subscription plan deleted successfully' });
         } else {
           res.status(500).json({ error: 'Failed to delete subscription plan' });
         }
       }
     } catch (error) {
       console.error('Error deleting subscription plan:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({success: false, error: 'Internal server error' });
     }
   };
 
@@ -45,12 +45,12 @@ const deletePlan = async (req, res) => {
       console.log(req.body)
       const newPlanId = await subscriptionModel.createSubscriptionPlan( type, details, price,duration);
       if (newPlanId) {
-        res.status(201).json({ message: 'Subscription plan created successfully', planId: newPlanId });
+        res.status(201).json({success: true, message: 'Subscription plan created successfully', planId: newPlanId });
         console.log('Subscription plan created successfully', newPlanId)
       } 
     } catch (error) {
       console.error('Error creating subscription plan:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({success: false, error: 'Internal server error' });
     }
   };
 

@@ -1,17 +1,32 @@
 /* eslint-disable no-empty */
-const mysql = require('mysql2');
-const util = require('util');
 
-const con = mysql.createConnection({
+// const mysql = require('mysql2');
+// const util = require('util');
+
+// const cont = mysql.createConnection({
+//   host: 'localhost',
+//   user: 'root',
+//   password: '1234',
+//   database: 'manju',
+// });
+// const query = util.promisify(cont.query).bind(cont);
+
+// module.exports = {
+//   cont,
+//   query,
+// };
+
+const mysql = require('mysql2');
+
+const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: '1234',
   database: 'manju',
+  connectionLimit: 10, 
 });
-const query = util.promisify(con.query).bind(con);
 
-module.exports = {
-  con,
-  query,
-};
+const db = pool.promise(); 
+
+module.exports = db;
 

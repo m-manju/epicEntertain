@@ -1,8 +1,12 @@
 /* eslint-disable no-useless-catch */
 const db = require('../config/db');
 
+
+
 const getBooksForUser = async () => {
+  let con;
   try {
+    con = await db.getConnection();
     const selectQuery = `SELECT book.id, book.name as 'book name',
       authors.name as 'author name', authors.bio as 'author bio',
       description, isbn, publication_year  
@@ -13,11 +17,17 @@ const getBooksForUser = async () => {
   } catch (error) {
     console.error('Error:', error);
     throw error;
+  } finally {
+    if (con) {
+      con.release(); 
+    }
   }
 };
 
 const getBookDetailsById = async (bookId) => {
+  let con;
   try {
+    con = await db.getConnection();
     const selectQuery = 'SELECT * FROM book WHERE id = ?';
     const results = await db.query(selectQuery, [bookId]);
     if (results.length === 0) {
@@ -28,6 +38,10 @@ const getBookDetailsById = async (bookId) => {
   } catch (error) {
     console.error('Error:', error);
     throw error;
+  } finally {
+    if (con) {
+      con.release(); 
+    }
   }
 };
 
