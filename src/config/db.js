@@ -7,7 +7,6 @@ const pool = mysql.createPool({
   user: 'root',
   password: '1234',
   database: 'manju',
-  connectionLimit: 10, 
 });
 
 const db = pool.promise(); 
