@@ -11,7 +11,7 @@ const getBooksForUser = async () => {
       authors.name as 'author name', authors.bio as 'author bio',
       description, isbn, publication_year  
       FROM book JOIN authors ON book.author_id = authors.id;`;
-    const rows = await db.query(selectQuery);
+    const rows = await con.query(selectQuery);
     console.log(rows,"helo");
     return rows;
   } catch (error) {
@@ -29,7 +29,7 @@ const getBookDetailsById = async (bookId) => {
   try {
     con = await db.getConnection();
     const selectQuery = 'SELECT * FROM book WHERE id = ?';
-    const results = await db.query(selectQuery, [bookId]);
+    const results = await con.query(selectQuery, [bookId]);
     if (results.length === 0) {
       return null;
     } else {

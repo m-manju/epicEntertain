@@ -2,14 +2,14 @@
 
 const db = require('../config/db');
 const util = require('util');
-const query = util.promisify(db.query).bind(db);
+const queryFunc = util.promisify(db.query).bind(db); 
 
 const createUser = async (username, email, password) => {
   let con;
   try {
     con = await db.getConnection();
     const insertQuery = 'INSERT INTO signup (username, email, password) VALUES (?, ?, ?)';
-    const results = await query(insertQuery, [username, email, password]);
+    const results = await queryFunc(insertQuery, [username, email, password]); 
     return results;
   } catch (error) {
     throw error;
@@ -25,7 +25,7 @@ const getUserByUsernameAndPassword = async (username, password) => {
   try {
     con = await db.getConnection();
     const selectQuery = 'SELECT * FROM signup WHERE username = ? AND password = ?';
-    const results = await query(selectQuery, [username, password]);
+    const results = await queryFunc(selectQuery, [username, password]); 
     return results;
   } catch (error) {
     throw error;
@@ -40,8 +40,8 @@ const getUserByUsername = async (username) => {
   let con;
   try {
     con = await db.getConnection();
-    const query = 'SELECT * FROM signup WHERE username = ?';
-    const results = await query(query, [username]);
+    const selectQuery = 'SELECT * FROM signup WHERE username = ?';
+    const results = await queryFunc(selectQuery, [username]); 
     return results;
   } catch (error) {
     throw error;
@@ -51,7 +51,6 @@ const getUserByUsername = async (username) => {
     }
   }
 };
-
 
 module.exports = {
   createUser,

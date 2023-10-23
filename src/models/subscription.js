@@ -6,7 +6,7 @@ const getAvailableSubscriptions = async () => {
   try {
     con = await db.getConnection();
     const selectQuery = 'SELECT * FROM subscription_type';
-    const results = await db.query(selectQuery);
+    const results = await con.query(selectQuery);
     return results;
   } catch (error) {
     throw error;
@@ -29,13 +29,13 @@ const updateUserSubscription = async (username, subscriptionType) => {
     con = await db.getConnection();
     const getTypeIdQuery = `SELECT id
       FROM subscription_type WHERE type = ?`;
-    const subscriptionTypeIdResult = await db.query(getTypeIdQuery, [subscriptionType]);
+    const subscriptionTypeIdResult = await con.query(getTypeIdQuery, [subscriptionType]);
     const subscriptionTypeId = subscriptionTypeIdResult[0].id;
     const selectQuery = ` SELECT COUNT(*) as count
       FROM subscriptions
       INNER JOIN signup ON signup.id = subscriptions.signup_id
       WHERE signup.username = ?`;
-    const countResult = await db.query(selectQuery, [username]);
+    const countResult = await con.query(selectQuery, [username]);
     const numberOfDays = subscriptionDurations[subscriptionType];
     if (countResult[0].count === 0) {
       const insertQuery = `
@@ -43,7 +43,7 @@ const updateUserSubscription = async (username, subscriptionType) => {
         SELECT ?, signup.id, NOW(), DATE_ADD(NOW(), INTERVAL ? DAY), 1
         FROM signup WHERE signup.username = ?`;
 
-      const insertResult = await db.query(insertQuery, [subscriptionTypeId, numberOfDays, username]);
+      const insertResult = await con.query(insertQuery, [subscriptionTypeId, numberOfDays, username]);
       return insertResult;
     } else {
       const updateQuery = ` UPDATE subscriptions
@@ -54,7 +54,7 @@ const updateUserSubscription = async (username, subscriptionType) => {
           subscriptions.bought = 1
         WHERE signup.username = ?`;
 
-      const updateResult = await db.query(updateQuery, [subscriptionTypeId, numberOfDays, username]);
+      const updateResult = await con.query(updateQuery, [subscriptionTypeId, numberOfDays, username]);
       return updateResult;
     }
   } catch (error) {
@@ -72,7 +72,7 @@ const getActiveSubscription = async (userId) => {
     con = await db.getConnection();
     const selectQuery = ` SELECT start_date, end_date
       FROM subscriptions WHERE id = ? AND type_id IS NOT NULL`;
-    const results = await db.query(selectQuery, [userId]);
+    const results = await con.query(selectQuery, [userId]);
     if (!results || results.length === 0) 
     {
       return {
