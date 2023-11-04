@@ -7,9 +7,11 @@ const adminRoutes = require('./admin/routes/adminRoutes');
 const adminBooksRoutes = require('./admin/routes/booksRoutes');
 const adminSubscriptionRoutes = require('./admin/routes/subscriptionRoutes');
 
+const cors = require('cors');
 const app = express();
 const port = 3001;
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

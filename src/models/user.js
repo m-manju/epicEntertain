@@ -1,54 +1,47 @@
 /* eslint-disable no-useless-catch */
-
 const db = require('../config/db');
 const util = require('util');
-const queryFunc = util.promisify(db.query).bind(db); 
 
-const createUser = async (username, email, password) => {
-  let con;
+const createUser = (username, email, password, callback) => {
   try {
-    con = await db.getConnection();
     const insertQuery = 'INSERT INTO signup (username, email, password) VALUES (?, ?, ?)';
-    const results = await queryFunc(insertQuery, [username, email, password]); 
-    return results;
+    db.query(insertQuery, [username, email, password], (err, results) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, results);
+    });
   } catch (error) {
-    throw error;
-  } finally {
-    if (con) {
-      con.release(); 
-    }
+    callback(error, null);
   }
 };
 
-const getUserByUsernameAndPassword = async (username, password) => {
-  let con;
+const getUserByUsernameAndPassword = (username, password, callback) => {
   try {
-    con = await db.getConnection();
     const selectQuery = 'SELECT * FROM signup WHERE username = ? AND password = ?';
-    const results = await queryFunc(selectQuery, [username, password]); 
-    return results;
+    db.query(selectQuery, [username, password], (err, results) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, results);
+    });
   } catch (error) {
-    throw error;
-  } finally {
-    if (con) {
-      con.release(); 
-    }
+    callback(error, null);
   }
 };
 
-const getUserByUsername = async (username) => {
-  let con;
+const getUserByUsername = (username, callback) => {
   try {
-    con = await db.getConnection();
-    const selectQuery = 'SELECT * FROM signup WHERE username = ?';
-    const results = await queryFunc(selectQuery, [username]); 
-    return results;
+    const query = 'SELECT * FROM signup WHERE username = ?';
+    db.query(query, [username], (err, results) => {
+      if (err) {
+        callback(err, null);
+      } else {
+        callback(null, results);
+      }
+    });
   } catch (error) {
-    throw error;
-  } finally {
-    if (con) {
-      con.release(); 
-    }
+    callback(error, null);
   }
 };
 

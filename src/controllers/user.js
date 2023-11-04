@@ -52,10 +52,11 @@ const loginUser = async (req, res) => {
         res.json({success: true,
           message: 'Login successful',
           token: token,
+          username:username,
         });
       } else {
         console.log('Incorrect password');
-        res.status(401).json({ error: 'Incorrect password' });
+        res.status(409).json({ error: 'Incorrect password' });
       }
     });
   } catch (error) {

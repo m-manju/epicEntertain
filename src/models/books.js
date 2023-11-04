@@ -1,51 +1,88 @@
-/* eslint-disable no-useless-catch */
 const db = require('../config/db');
 
-
-
-const getBooksForUser = async () => {
-  let con;
-  try {
-    con = await db.getConnection();
-    const selectQuery = `SELECT book.id, book.name as 'book name',
-      authors.name as 'author name', authors.bio as 'author bio',
-      description, isbn, publication_year  
-      FROM book JOIN authors ON book.author_id = authors.id;`;
-    const rows = await con.query(selectQuery);
-    console.log(rows,"helo");
-    return rows;
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  } finally {
-    if (con) {
-      con.release(); 
-    }
-  }
+const getAvailableSubscriptions = () => {
+  return new Promise((resolve, reject) => {
+    const selectQuery = 'SELECT * FROM subscription_type';
+    db.query(selectQuery, (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
 };
 
-const getBookDetailsById = async (bookId) => {
-  let con;
-  try {
-    con = await db.getConnection();
-    const selectQuery = 'SELECT * FROM book WHERE id = ?';
-    const results = await con.query(selectQuery, [bookId]);
-    if (results.length === 0) {
-      return null;
-    } else {
-      return results[0];
+
+const updateSubscriptionPlan = (userId, subscriptionTypeId, callback) => {
+  const updateQuery = 'UPDATE signup SET subscription_type_id = ? WHERE id = ?';
+  db.query(updateQuery, [subscriptionTypeId, userId], (err, results) => {
+    if (err) {
+      return callback(err);
     }
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  } finally {
-    if (con) {
-      con.release(); 
-    }
-  }
+    callback(null);
+  });
+
 };
+
+
+const getActiveSubscription = (userId, callback) => {
+  const selectQuery = `
+    SELECT subscription_start, subscription_end
+    FROM signup
+    WHERE id = ? AND subscription_type_id IS NOT NULL
+  `;
+  db.query(selectQuery, [userId], (err, results) => {
+    if (err) {
+      return callback(err, null);
+    }
+
+    const subscription = results[0];
+    if (!subscription) {
+      return callback(null, null);
+    }
+
+    const currentDate = new Date();
+    const endDate = new Date(subscription.subscription_end);
+    const remainingDays = Math.max(0, Math.ceil((endDate - currentDate) / (1000 * 60 * 60 * 24)));
+    const hasExpired = endDate < currentDate;
+
+    callback(null, {
+      subscription_start: subscription.subscription_start,
+      subscription_end: subscription.subscription_end,
+      remaining_days: remainingDays,
+      has_expired: hasExpired,
+    });
+  });
+};
+
+const updateUserSubscription = (username, subscriptionTypeId, subscriptionEndDate) => {
+  return new Promise((resolve, reject) => {
+    const updateQuery = `
+      UPDATE signup
+      SET
+        bought = 1,
+        subscription_type_id = ?,
+        subscription_start = NOW(),
+        subscription_end = ?
+      WHERE username = ?`;
+
+    db.query(updateQuery, [subscriptionTypeId, subscriptionEndDate, username], (err, results) => {
+      if (err) {
+        console.error('Error updating subscription:', err);
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
+
 
 module.exports = {
-  getBooksForUser,
-  getBookDetailsById,
+  getAvailableSubscriptions,
+  updateSubscriptionPlan,
+  getActiveSubscription,
+  updateUserSubscription,
 };
