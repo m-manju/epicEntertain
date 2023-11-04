@@ -3,7 +3,6 @@ const booksModel = require('../models/books');
 const upload = require('../../config/multer');
 const xlsx = require('xlsx');
 
-
 const addBooksFromExcel = async (req, res) => {
   try {
     if (!req.file) {
@@ -22,10 +21,10 @@ const addBooksFromExcel = async (req, res) => {
       const bookId = await booksModel.addBook(name, description, author_id, isbn, publication_year, image_url);
     }
     console.log('Books added successfully from Excel');
-    res.status(201).json({ success: true, message: 'Books added successfully from Excel' });
+    res.status(201).json({ message: 'Books added successfully from Excel' });
   } catch (error) {
     console.error('Error adding books from Excel:', error);
-    res.status(500).json({success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -38,10 +37,10 @@ const addBookWithImage = async (req, res) => {
     const imageUrl = req.file.path;
     const bookId = await booksModel.addBook(name, description, author_id, isbn, publication_year, imageUrl);
     console.log('Book added successfully');
-    res.status(201).json({success: true, message: 'Book added successfully', bookId });
+    res.status(201).json({ message: 'Book added successfully', bookId });
   } catch (error) {
     console.error('Error adding book with image:', error);
-    res.status(500).json({success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -57,13 +56,13 @@ const editBook = async (req, res) => {
 
     if (result) {
       console.log('Book edited successfully');
-      res.status(200).json({success: true, message: 'Book edited successfully' });
+      res.status(200).json({ message: 'Book edited successfully' });
     } else {
       res.status(500).json({ error: 'Failed to edit book' });
     }
   } catch (error) {
     console.error('Error editing book:', error);
-    res.status(500).json({success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -77,13 +76,13 @@ const deleteBook = async (req, res) => {
     const result = await booksModel.deleteBook(bookId);
     if (result) {
       console.log('Book deleted successfully');
-      res.status(200).json({success: true, message: 'Book deleted successfully' });
+      res.status(200).json({ message: 'Book deleted successfully' });
     } else {
       res.status(500).json({ error: 'Failed to delete book' });
     }
   } catch (error) {
     console.error('Error deleting book:', error);
-    res.status(500).json({success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -96,10 +95,10 @@ const addBookWithFile = async (req, res) => {
     const bookFileUrl = req.file.path;
     const bookId = await booksModel.addBookWithFile(name, description, author_id, isbn, publication_year, bookFileUrl);
     console.log('Book added successfully');
-    res.status(201).json({success: true, message: 'Book added successfully', bookId });
+    res.status(201).json({ message: 'Book added successfully', bookId });
   } catch (error) {
     console.error('Error adding book with file:', error);
-    res.status(500).json({success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -110,10 +109,10 @@ const getBookFile = async (req, res) => {
     if (!bookFileUrl) {
       return res.status(404).json({ error: 'Book not found' });
     }
-    res.status(200).json({success: true, bookFile: bookFileUrl });
+    res.status(200).json({ fileUrl: bookFileUrl });
   } catch (error) {
     console.error('Error getting book file URL:', error);
-    res.status(500).json({success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -126,4 +125,3 @@ module.exports = {
   addBookWithFile,
   getBookFile,
 };
-

@@ -16,7 +16,6 @@ const loginAdmin = async (req, res) => {
       const user = { full_name: results[0].full_name };
       const token = jwt.sign(user, jwtConfig.secretKey, { expiresIn: jwtConfig.expiresIn });
       res.json({
-        success: true,
         message: 'Login successful',
         token: token,
       });
@@ -24,7 +23,7 @@ const loginAdmin = async (req, res) => {
     });
   } catch (error) {
     console.error('Error in login:', error);
-    res.status(500).json({success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -33,31 +32,33 @@ const createAdminWithPermissions = async (req, res) => {
   try {
     const adminId = await userAdmin.createAdmin(full_name, email, password);
     await userAdmin.assignPermissions(adminId, permissions);
-    res.status(201).json({success: true, message: 'Admin created with permissions.' });
+    res.status(201).json({ message: 'Admin created with permissions.' });
     console.log('created admin with permission successfully');
   } catch (error) {
     console.error('Error creating admin:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 const updateAdminRolePermissions = async (req, res) => {
   const { adminId, permissionId } = req.body;
   try {
-    const updated = await userAdmin.assignPermissions(adminId, permissionId);
+    const updated = await userAdmin.updateAdminRolePermissions(adminId, permissionId);
     if (updated) {
-      res.status(200).json({success: true, message: 'Admin role permissions updated successfully' });
-    } 
+      res.status(200).json({ message: 'Admin role permissions updated successfully' });
+    } else {
+      res.status(500).json({ error: 'Failed to update admin role permissions' });
+    }
     console.log('updation successful');
   } catch (error) {
     console.error('Error updating admin role permissions:', error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 module.exports = {
   loginAdmin,
   createAdminWithPermissions,
   updateAdminRolePermissions,
 };
-
